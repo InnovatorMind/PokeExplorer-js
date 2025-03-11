@@ -2,14 +2,24 @@
 :root {
     --bg-color: white;
     --text-color: black;
+    --card-bg-color: rgb(150, 150, 118);
+    --title-color : red;
+    --search-bar-bgc : 2px solid rgba(0, 0, 0, 0.4);
+    --card-border : 2px solid rgba(0, 0, 0, 0.5);
+    --searchInput-color : rgb(0, 0, 0);
+
 }
 
 /* Dark mode styles */
 .dark-mode {
-    --bg-color: black;
+    --bg-color: rgb(63, 63, 63);
     --text-color: white;
+    --card-bg-color: rgb(37, 37, 37);
+    --card-border : 2px solid rgba(255, 255, 255, 0.5);
+    --title-color : yellow;
+    --search-bar-bgc : 2px solid rgba(255, 255, 255, 0.4);
+    --searchInput-color : white;
 }
-
 
 *{
     margin: 0;
@@ -33,7 +43,7 @@ body {
 
 .navbar {
     padding-inline: 24px;
-    box-shadow: 0 2px 4px 0px rgba(0,0,0, 0.3);
+    /* box-shadow: 0 2px 4px 0px rgba(0,0,0, 0.3); */
     position: relative;
 }
 
@@ -48,8 +58,9 @@ body {
 }
 
 #title {
-    font-weight: 800;
+    font-size: xx-large;
     margin: 10px;
+    color: var(--title-color);
 }
 
 #search-bar {
@@ -57,13 +68,14 @@ body {
     display: flex;
     align-items: center;
     margin: 8px 8px;
-    border: 2px solid rgba(0, 0, 0, 0.3);
+    border: var(--search-bar-bgc);
     border-radius: 16px;
     padding: 8px;
     /* padding-inline: 8px; */
 }
 
 #searchInput {
+    background: none;
     width: 80%;
     margin-inline: 8px;
     display: block;
@@ -71,6 +83,7 @@ body {
     font-size: 16px;
     outline: none;
     font-size: smaller;
+    color: var(--searchInput-color);
 }
 
 
@@ -92,28 +105,26 @@ main {
 .card {
     height: 256px;
     width: 200px;
-    /* background-color: rgb(170, 120, 245); */
-    background-color: rgb(150, 150, 118);
-    border: 2px solid rgba(0, 0, 0, 0.5);
+    background-color: var(--card-bg-color);
+    border: var(--card-border);
     border-radius: 8px;
     margin: 16px;
     padding: 4px;
     cursor: pointer;
-    box-shadow: 8px 8px 2px 0px rgba(0,0,0, 0.3);
     text-align: center;
 }
 
 .card:hover {
-    border: 2px solid rgb(227, 173, 173);
+    /* border: 2px solid red; */
+    box-shadow: 8px 8px 2px 0px rgba(0,0,0, 0.3);
     height: 250px;
-    width: 196px;
-    box-shadow: 8px 8px 2px 0px rgba(209, 112, 112, 0.5);
+    /* box-shadow: 8px 8px 2px 0px rgba(209, 112, 112, 0.5); */
 }
 
 .poke-img {
     height: 60%;
     border-radius: 8px;
-    background-color: rgb(150, 150, 118);
+    /* background-color: rgb(150, 150, 118); */
     align-items: center;
     padding: 4px;
     margin: 8px 0px;
@@ -127,9 +138,8 @@ main {
 }
 
 #loadMoreBtn {
-    margin: 10px;
-    padding: 8px;
-    background-color: #007bff;
-    color: white;
+    background: none;
+    width: 100%;
     border-radius: 8px;
+    border: none;
 }

@@ -37,6 +37,8 @@ function displayPokemon(pokemonList) {
         card.classList.add("card");
 
         card.innerHTML = `
+            <p>#${pokemon.id}</p>
+    
             <div class="poke-img">
                 <img src="${pokemon.sprites.other.dream_world.front_default}" alt="${pokemon.name}">
             </div>
