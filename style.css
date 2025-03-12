@@ -7,7 +7,7 @@
     --search-bar-bgc : 2px solid rgba(0, 0, 0, 0.4);
     --card-border : 2px solid rgba(0, 0, 0, 0.5);
     --searchInput-color : rgb(0, 0, 0);
-
+    --card-shadow : 8px 8px 2px 0px rgba(0,0,0, 0.3);
 }
 
 /* Dark mode styles */
@@ -19,6 +19,7 @@
     --title-color : yellow;
     --search-bar-bgc : 2px solid rgba(255, 255, 255, 0.4);
     --searchInput-color : white;
+    --card-shadow : 8px 8px 2px 0px rgba(255, 255, 255, 0.264);
 }
 
 *{
@@ -36,14 +37,15 @@ body {
 }
 
 #theme-toggle {
-    padding: 8px;
-    border: none;
+    padding: 8px 16px;
+    border: 2px solid var(--text-color);
+    color: var(--text-color);
+    background-color: #00000000;
     border-radius: 4px;
 }
 
 .navbar {
     padding-inline: 24px;
-    /* box-shadow: 0 2px 4px 0px rgba(0,0,0, 0.3); */
     position: relative;
 }
 
@@ -63,15 +65,21 @@ body {
     color: var(--title-color);
 }
 
+#tools {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 1200px;
+    padding: 16px;
+}
+
 #search-bar {
-    width: 50%;
     display: flex;
     align-items: center;
-    margin: 8px 8px;
+    margin: 8px 28px;
     border: var(--search-bar-bgc);
     border-radius: 16px;
     padding: 8px;
-    /* padding-inline: 8px; */
 }
 
 #searchInput {
@@ -103,28 +111,24 @@ main {
 }
 
 .card {
-    height: 256px;
-    width: 200px;
+    height: 248px;
+    width: 196px;
     background-color: var(--card-bg-color);
     border: var(--card-border);
     border-radius: 8px;
     margin: 16px;
-    padding: 4px;
+    padding: 8px;
     cursor: pointer;
     text-align: center;
 }
 
 .card:hover {
-    /* border: 2px solid red; */
-    box-shadow: 8px 8px 2px 0px rgba(0,0,0, 0.3);
-    height: 250px;
-    /* box-shadow: 8px 8px 2px 0px rgba(209, 112, 112, 0.5); */
+    box-shadow: var(--card-shadow);
 }
 
 .poke-img {
     height: 60%;
     border-radius: 8px;
-    /* background-color: rgb(150, 150, 118); */
     align-items: center;
     padding: 4px;
     margin: 8px 0px;
@@ -140,6 +144,15 @@ main {
 #loadMoreBtn {
     background: none;
     width: 100%;
+    padding: 4px;
     border-radius: 8px;
-    border: none;
+    border: 2px dotted skyblue;
+    color: var(--text-color);
+}
+
+@media (max-width: 480px) {
+    .card {
+       height: 218px;
+       width: 148px;
+    }
 }
