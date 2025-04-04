@@ -141,14 +141,16 @@ main {
     margin: auto;
 }
 
-#loadMoreBtn {
-    background: none;
-    width: 100%;
-    padding: 4px;
-    border-radius: 8px;
-    border: 2px dotted skyblue;
-    color: var(--text-color);
+footer {
+    text-align: center;
 }
+
+#loading {
+    background: none;
+    padding: 4px;
+    height: 50px;
+}
+
 
 @media (max-width: 480px) {
     .card {

@@ -1,49 +1,34 @@
-const MAX_POKEMON = 495;
-let nextUrl = "https://pokeapi.co/api/v2/pokemon"; // Initial API URL
-let allPokemon = []; // Store all fetched Pokémon
+const MAX_POKEMON = 30;
+let nextUrl = "https://pokeapi.co/api/v2/pokemon";
+let allPokemon = [];
+let isFetching = false; // Prevent duplicate requests
 
-fetch(`${nextUrl}?limit=${MAX_POKEMON}`)
-  .then((response) => response.json())
-  .then((data) => {
-    allPokemons = data.results;
-    // console.log(data.results);
-    displayPokemons(allPokemons);
-  });
+// fetch pokemon data
+function fetchPokemons() {
+  if (isFetching || !nextUrl) return;
+  isFetching = true;
 
-// async function fetchPokemon() {
-//     if (!nextUrl) return; // Stop fetching if no more data
+  fetch(nextUrl)
+    .then((response) => response.json())
+    .then((data) => {
+      nextUrl = data.next; // Store next page URL
 
-//     try {
-//         const res = await fetch(nextUrl);
-//         const json = await res.json();
-
-//         nextUrl = json.next;
-
-//         const data = json.results;
-
-//         const promises = data.map(each => fetch(each.url).then(res => res.json()));
-//         const pokemonDetails = await Promise.all(promises);
-
-//         allPokemon = [...allPokemon, ...pokemonDetails];
-
-//         // Display all Pokémon
-//         displayPokemons(allPokemon);
-//     } catch (error) {
-//         console.error("Error fetching data:", error);
-//     }
-// }
+      allPokemon = [...allPokemon, ...data.results]; 
+      displayPokemons(data.results); 
+      isFetching = false;
+    })
+    .catch((error) => {
+      console.error("Error fetching Pokémon:", error);
+      isFetching = false;
+    });
+}
 
 // Function to display Pokémon
 const container = document.querySelector(".pokemon-container");
 function displayPokemons(pokemon) {
-  console.log(pokemon);
-  container.innerHTML = ""; // Clear previous Pokémon before displaying filtered ones
-
   pokemon.forEach((pokemon) => {
-    //     const types = pokemon.types.map(t => t.type.name).join(", "); // Get types
-
     const pokemonID = pokemon.url.split("/")[6];
-    console.log(pokemonID);
+    // console.log(pokemonID);
     const card = document.createElement("div");
     card.className = "list-item";
     card.classList.add("card");
@@ -67,47 +52,61 @@ function displayPokemons(pokemon) {
     //         console.log("hi");
     //       });
   });
+  if (!nextUrl) {
+    document.getElementById("target").style.display = "none";
+  }
 }
 
+// search pokemon
 const searchText = document.getElementById("searchInput");
-searchText.addEventListener("keyup", searchPokemon);
+searchText.addEventListener("keypress", searchPokemon);
 function searchPokemon() {
-  const searchTerm = searchInput.value.toLowerCase();
-  let filteredPokemons;
+  if (event.key === "Enter") {
+    alert("feature is under development");
+  }
+  //   const searchTerm = searchInput.value.toLowerCase();
+  //   let filteredPokemons;
 
-//   if (nameFilter.checked) {
-    filteredPokemons = allPokemons.filter((pokemon) =>
-      pokemon.name.toLowerCase().startsWith(searchTerm)
-    );
-//   } else {
-//     filteredPokemons = allPokemons;
-//   }
+  //   filteredPokemons = allPokemons.filter((pokemon) =>
+  //     pokemon.name.toLowerCase().startsWith(searchTerm)
+  //   );
 
-  displayPokemons(filteredPokemons);
-
-//   if (filteredPokemons.length === 0) {
-//     notFoundMessage.style.display = "block";
-//   } else {
-//     notFoundMessage.style.display = "none";
-//   }
+  //   displayPokemons(filteredPokemons);
 }
 
-const toggleButton = document.getElementById("theme-toggle");
-
-toggleButton.addEventListener("click", () => {
-    document.body.classList.toggle("dark-mode");
-    if (document.body.classList.contains("dark-mode")) {
-        localStorage.setItem("theme", "dark");
-        toggleButton.innerHTML = `
-        <i class="fa-regular fa-moon"></i>&nbsp; Dark Mode
-        `
-    } else {
-        localStorage.setItem("theme", "light");
+// Infinite Loading
+const target = document.getElementById("target");
+// Create an Intersection Observer
+const observer = new IntersectionObserver(
+  (entries) => {
+    if (entries[0].isIntersecting) {
+      target.innerHTML = `<img id="loading" src="images/pokeLoad.gif" alt="Observed Image"><p>Loading...</p>`;
+      console.log("Element is visible!");
+      fetchPokemons();
     }
+  },
+  { threshold: 0.1 }
+); // Fires when 100% of the element is in view
+
+// Start observing the target element
+observer.observe(target);
+
+// dark-light mode
+const toggleButton = document.getElementById("theme-toggle");
+toggleButton.addEventListener("click", () => {
+  document.body.classList.toggle("dark-mode");
+  if (document.body.classList.contains("dark-mode")) {
+    localStorage.setItem("theme", "dark");
+    toggleButton.innerHTML = `
+        <i class="fa-regular fa-moon"></i>&nbsp; Dark Mode
+        `;
+  } else {
+    localStorage.setItem("theme", "light");
+  }
 });
 
 window.onload = () => {
-    if (localStorage.getItem("theme") === "dark") {
-        document.body.classList.add("dark-mode");
-    }
+  if (localStorage.getItem("theme") === "dark") {
+    document.body.classList.add("dark-mode");
+  }
 };
