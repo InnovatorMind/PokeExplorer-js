@@ -1,85 +1,98 @@
-let nextUrl = "https://pokeapi.co/api/v2/pokemon?limit=30"; // Initial API URL
+const MAX_POKEMON = 495;
+let nextUrl = "https://pokeapi.co/api/v2/pokemon"; // Initial API URL
 let allPokemon = []; // Store all fetched Pokémon
 
-async function fetchPokemon() {
-    if (!nextUrl) return; // Stop fetching if no more data
+fetch(`${nextUrl}?limit=${MAX_POKEMON}`)
+  .then((response) => response.json())
+  .then((data) => {
+    allPokemons = data.results;
+    // console.log(data.results);
+    displayPokemons(allPokemons);
+  });
 
-    try {
-        const res = await fetch(nextUrl);
-        const json = await res.json();
+// async function fetchPokemon() {
+//     if (!nextUrl) return; // Stop fetching if no more data
 
-        nextUrl = json.next; 
+//     try {
+//         const res = await fetch(nextUrl);
+//         const json = await res.json();
 
-        const data = json.results;
+//         nextUrl = json.next;
 
+//         const data = json.results;
 
-        const promises = data.map(each => fetch(each.url).then(res => res.json()));
-        const pokemonDetails = await Promise.all(promises);
+//         const promises = data.map(each => fetch(each.url).then(res => res.json()));
+//         const pokemonDetails = await Promise.all(promises);
 
-        allPokemon = [...allPokemon, ...pokemonDetails];
+//         allPokemon = [...allPokemon, ...pokemonDetails];
 
-        // Display all Pokémon
-        displayPokemon(allPokemon);
-    } catch (error) {
-        console.error("Error fetching data:", error);
-    }
-}
+//         // Display all Pokémon
+//         displayPokemons(allPokemon);
+//     } catch (error) {
+//         console.error("Error fetching data:", error);
+//     }
+// }
 
 // Function to display Pokémon
-function displayPokemon(pokemonList) {
-    const container = document.querySelector(".pokemon-container");
-    container.innerHTML = ""; // Clear previous Pokémon before displaying filtered ones
+const container = document.querySelector(".pokemon-container");
+function displayPokemons(pokemon) {
+  console.log(pokemon);
+  container.innerHTML = ""; // Clear previous Pokémon before displaying filtered ones
 
-    pokemonList.forEach(pokemon => {
-        const types = pokemon.types.map(t => t.type.name).join(", "); // Get types
+  pokemon.forEach((pokemon) => {
+    //     const types = pokemon.types.map(t => t.type.name).join(", "); // Get types
 
-        const card = document.createElement("div");
-        card.classList.add("card");
+    const pokemonID = pokemon.url.split("/")[6];
+    console.log(pokemonID);
+    const card = document.createElement("div");
+    card.className = "list-item";
+    card.classList.add("card");
 
-        card.innerHTML = `
-            <p>#${pokemon.id}</p>
+    card.innerHTML = `
+            <p>#${pokemonID}</p>
     
             <div class="poke-img">
-                <img src="${pokemon.sprites.other.dream_world.front_default}" alt="${pokemon.name}">
+                <img src="https://raw.githubusercontent.com/pokeapi/sprites/master/sprites/pokemon/other/dream-world/${pokemonID}.svg" alt="${
+      pokemon.name
+    }">
             </div>
             <div class="poke-info">
                 <h3>${pokemon.name.toUpperCase()}</h3>
-                <p>Type: <strong>${types}</strong></p>
             </div>
         `;
+    //             <p>Type: <strong>${types}</strong></p>
 
-        container.appendChild(card);
-        card.addEventListener("click", async () => {
-            console.log("hi");
-          });
-    });
+    container.appendChild(card);
+    //     card.addEventListener("click", async () => {
+    //         console.log("hi");
+    //       });
+  });
 }
 
+const searchText = document.getElementById("searchInput");
+searchText.addEventListener("keyup", searchPokemon);
 function searchPokemon() {
-    const searchText = document.getElementById("searchInput").value.toLowerCase();
-    const filteredPokemon = allPokemon.filter(pokemon => pokemon.name.includes(searchText));
-    displayPokemon(filteredPokemon);
+  const searchTerm = searchInput.value.toLowerCase();
+  let filteredPokemons;
+
+//   if (nameFilter.checked) {
+    filteredPokemons = allPokemons.filter((pokemon) =>
+      pokemon.name.toLowerCase().startsWith(searchTerm)
+    );
+//   } else {
+//     filteredPokemons = allPokemons;
+//   }
+
+  displayPokemons(filteredPokemons);
+
+//   if (filteredPokemons.length === 0) {
+//     notFoundMessage.style.display = "block";
+//   } else {
+//     notFoundMessage.style.display = "none";
+//   }
 }
-
-// Create search bar
-const searchBar = document.getElementById("searchInput")
-searchBar.oninput = searchPokemon; 
-
-// Add "Load More Pokémon" button
-const loadMoreBtn = document.createElement("button");
-loadMoreBtn.innerText = "Load More Pokémon";
-loadMoreBtn.id = "loadMoreBtn";
-loadMoreBtn.onclick = fetchPokemon;
-document.body.appendChild(loadMoreBtn);
-
-const container = document.createElement("div");
-container.classList.add("pokemon-container");
-document.body.appendChild(container);
-
-fetchPokemon();
 
 const toggleButton = document.getElementById("theme-toggle");
-
 
 toggleButton.addEventListener("click", () => {
     document.body.classList.toggle("dark-mode");
